@@ -1,0 +1,37 @@
+#Created by: Lynn Houston, February 2020
+#Description: PS Script that merges CSV files placed inside a desktop folder called EXCELDATA
+
+#Definitions
+$DesktopFolder = "$home\Desktop\EXCELDATA\"
+$Hostpath = $DesktopFolder + "InputFolder"
+$outputPath = $desktopFolder+"OutputFolder"
+
+#Create directory function 
+ function Create-dirs(){
+    param([Parameter(mandatory = $true)]
+    $hostpath)
+    if(!(Test-Path -Path $Hostpath)){
+    New-Item -Path $Hostpath -ItemType Directory
+    write-host "$hostpath directory created on your desktop" -ForegroundColor green
+    }
+    else {
+    Write-Host "$hostpath already exists" -ForegroundColor Green
+    }
+ }
+  
+# Create Directories
+foreach($Dir_Path in $dirs){
+Create-dirs $Dir_Path
+}
+
+Write-Host "Script: CSV merge
+            --
+           Please load all csv files into 
+           $hostpath."
+           pause 2.0
+           Write-Host "Note: Output file will be placed in
+           $outputpath"
+
+#Collect all csvs, merge, and output as 1 file
+$outfile = $outputpath+"\"+  "merged.csv"
+Get-ChildItem  $Hostpath *.csv | Select-Object -ExpandProperty FullName | Import-Csv | Export-Csv $outfile -NoTypeInformation -Append
